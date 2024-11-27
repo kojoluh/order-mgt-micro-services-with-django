@@ -1,0 +1,81 @@
+# docker-compose.yaml
+version: '3.1'
+
+services:
+  # PostgreSQL service
+  inventory_db:
+    image: postgres:15
+    container_name: inventory_db
+    restart: on-failure
+    ports:
+      - 0.0.0.0:5432:5432
+#    volumes:
+#      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - zippy-network
+
+  order_db:
+    image: postgres:15
+    container_name: order_db
+    restart: on-failure
+    ports:
+      - 0.0.0.0:5433:5432
+#    volumes:
+#      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - zippy-network
+
+  shipment_db:
+    image: postgres:15
+    container_name: shipment_db
+    restart: on-failure
+    ports:
+      - 0.0.0.0:5434:5432
+#    volumes:
+#      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - zippy-network
+
+  # Kafka service
+  kafka:
+    image: confluentinc/cp-kafka:7.2.1
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - zippy-network
+
+  # Zookeeper service for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.2.1
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - zippy-network
+
+networks:
+  zippy-network:
+    driver: bridge
