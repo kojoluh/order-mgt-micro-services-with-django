@@ -1,11 +1,11 @@
-# Order placement and management for zipline
+# Order placement and management for Sweep
 
-Zipline both flies autonomous vehicles and operates a full-fledged logistics system. We run
-operations out of our distribution centers, which we call "nests.
-" At a given nest, we have an
+Sweep both flies autonomous vehicles and operates a full-fledged logistics system. We run
+operations out of our distribution centers, which we call "nests." At a given nest, we have an
 inventory of medical supplies and a team of operators who manage that inventory and process
-orders from doctors.
-This repository contains the backend services and APIs for managing orders and inventory at Zipline nests. The system allows operators to:
+orders from doctors. 
+
+This repository contains the backend services and APIs for managing orders and inventory at Sweep nests. The system allows operators to:
 
 - Track inventory levels of medical supplies
 - Process incoming orders from healthcare facilities
