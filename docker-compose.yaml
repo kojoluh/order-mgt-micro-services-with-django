@@ -1,0 +1,157 @@
+# docker-compose.yaml
+
+version: '3.1'
+
+services:
+  # PostgreSQL service
+  inventory_db:
+    image: postgres:15
+    container_name: inventory_db
+    restart: on-failure
+    ports:
+      - 0.0.0.0:5432:5432
+#    volumes:
+#      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: Zippy
+      POSTGRES_PASSWORD: Zippy2024Lin3
+      POSTGRES_DB: inventory_db
+    networks:
+      - zippy-network
+
+  order_db:
+    image: postgres:15
+    container_name: order_db
+    restart: on-failure
+    ports:
+      - 0.0.0.0:5433:5432
+#    volumes:
+#      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: Zippy
+      POSTGRES_PASSWORD: Zippy2024Lin3
+      POSTGRES_DB: order_db
+    networks:
+      - zippy-network
+
+  shipment_db:
+    image: postgres:15
+    container_name: shipment_db
+    restart: on-failure
+    ports:
+      - 0.0.0.0:5434:5432
+#    volumes:
+#      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: Zippy
+      POSTGRES_PASSWORD: Zippy2024Lin3
+      POSTGRES_DB: shipment_db
+    networks:
+      - zippy-network
+
+  # Kafka service
+  kafka:
+    image: confluentinc/cp-kafka:7.2.1
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - zippy-network
+
+  # Zookeeper service for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.2.1
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - zippy-network
+
+  # Inventory service
+  # inventory-service:
+  #   build: ./inventory_service
+  #   container_name: inventory_service
+  #   command: python manage.py runserver 0.0.0.0:8000
+  #   environment:
+  #     POSTGRES_DB: inventory_db
+  #     POSTGRES_USER: Zippy
+  #     POSTGRES_PASSWORD: Zippy2024Lin3
+  #     POSTGRES_HOST: postgres
+  #     KAFKA_BROKER: kafka:9092
+  #   depends_on:
+  #     - postgres
+  #     - kafka
+  #   ports:
+  #     - "8001:8000"
+  #   networks:
+  #     - zippy-network
+
+  # # Order service
+  # order-service:
+  #   build: ./order_service
+  #   container_name: order_service
+  #   command: python manage.py runserver 0.0.0.0:8000
+  #   environment:
+  #     POSTGRES_DB: order_db
+  #     POSTGRES_USER: Zippy
+  #     POSTGRES_PASSWORD: Zippy2024Lin3
+  #     POSTGRES_HOST: postgres
+  #     KAFKA_BROKER: kafka:9092
+  #   depends_on:
+  #     - postgres
+  #     - kafka
+  #   ports:
+  #     - "8002:8000"
+  #   networks:
+  #     - zippy-network
+
+  # # Shipment service
+  # shipment-service:
+  #   build: ./shipment_service
+  #   container_name: shipment_service
+  #   command: python manage.py runserver 0.0.0.0:8000
+  #   environment:
+  #     POSTGRES_DB: shipment_db
+  #     POSTGRES_USER: Zippy
+  #     POSTGRES_PASSWORD: Zippy2024Lin3
+  #     POSTGRES_HOST: postgres
+  #     KAFKA_BROKER: kafka:9092
+  #   depends_on:
+  #     - postgres
+  #     - kafka
+  #   ports:
+  #     - "8003:8000"
+  #   networks:
+  #     - zippy-network
+
+# volumes:
+#   postgres_data:
+
+networks:
+  zippy-network:
+    driver: bridge
+
+
+# version: '3.7'
+# services:
+#   zookeeper:
+#     image: wurstmeister/zookeeper
+#     ports:
+#      - "2181:2181"
+#   kafka:
+#     image: wurstmeister/kafka
+#     ports:
+#      - "9092:9092"
+#     environment:
+#       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+#       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181

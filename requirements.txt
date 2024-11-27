@@ -1,0 +1,19 @@
+# Django and its REST framework
+Django==4.2.5              # Django framework
+djangorestframework==3.14.0 # Django REST framework for building APIs
+
+# Kafka integration for messaging
+# kafka-python==2.0.2        # Kafka client for Python
+kafka-python-ng
+
+# Async support for Kafka in Django
+channels==4.0.0            # Django Channels for async support
+
+# For running the Django app asynchronously
+uvicorn==0.22.0            # ASGI server
+gunicorn==21.2.0           # WSGI server for production use
+
+
+# PostgreSQL database driver
+psycopg2-binary
+psycopg2           # PostgreSQL adapter for Python
